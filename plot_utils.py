@@ -2,6 +2,21 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+def plot_one_predicted(i, predictions_array, true_label, img, class_names):
+    predictions_array, true_label, img = predictions_array[i], true_label[i], img[i].reshape(50, 50)
+    plt.grid(False)
+    plt.xticks([])
+    plt.yticks([])
+
+    plt.imshow(img, cmap=plt.cm.binary)
+
+    predicted_label = np.argmax(predictions_array)
+    color = 'blue'
+
+    plt.xlabel("{} {:2.0f}%".format(class_names[predicted_label],
+                                         100 * np.max(predictions_array)),
+               color=color)
+
 def plot_image(i, predictions_array, true_label, img, class_names):
     predictions_array, true_label, img = predictions_array[i], true_label[i], img[i].reshape(50, 50)
     plt.grid(False)
