@@ -1,30 +1,31 @@
 from __future__ import absolute_import, division, print_function
 
-# TensorFlow and tf.keras
-import tensorflow as tf
-import tensorflow_datasets as tfds
-from tensorflow import keras
+import random
 
+import matplotlib.pyplot as plt
 # Helper libraries
 import numpy as np
-import matplotlib.pyplot as plt
+# TensorFlow and tf.keras
+import tensorflow as tf
+from tensorflow import keras
 
-from consts import img_dim, model_name
+from consts import model_name, split_ratio
 from plot_utils import plot_image, plot_value_array
-
 # tfds works in both Eager and Graph modes
+from utils import prepare_img_and_label, load_flowers
+
 tf.enable_eager_execution()
 
 
 model = keras.models.load_model(model_name)
 
 # See available datasets
-print(tfds.list_builders())
+# print(tfds.list_builders())
 
 class_names = ['dandelion', 'daisy', 'tulips', 'sunflowers', 'roses']
-# Construct a tf.data.Dataset
-# ds_train, ds_test = tfds.load(name="horses_or_humans", split=["train", "test"])
-ds_all = tfds.load(name="tf_flowers", split="train")
+# # Construct a tf.data.Dataset
+# # ds_train, ds_test = tfds.load(name="horses_or_humans", split=["train", "test"])
+# ds_all = tfds.load(name="tf_flowers", split="train")
 
 # Build your input pipeline
 # ds_train = ds_train.shuffle(1000).batch(128).prefetch(10)
@@ -50,14 +51,24 @@ ds_test = []
 #     train_images.append(image)
 #     train_labels.append(label)
 
-ds_all = ds_all.shuffle(buffer_size=100)
-for i in range(0, 20):
-    mnist_example, = ds_all.take(1)
-    image, label = mnist_example["image"], mnist_example["label"]
-    image = image / 255
-    image = tf.image.resize_images(image, (img_dim, img_dim))
-    image = tf.image.rgb_to_grayscale(image)
-    image = image.numpy()
+dataset_all = load_flowers()
+# ds_all = ds_all.shuffle(buffer_size=100)
+# for i in range(0, 20):
+#     mnist_example, = ds_all.take(1)
+#     image, label = mnist_example["image"], mnist_example["label"]
+#     image = image / 255
+#     image = tf.image.resize_images(image, (img_dim, img_dim))
+#     image = tf.image.rgb_to_grayscale(image)
+#     image = image.numpy()
+#     test_images.append(image)
+#     test_labels.append(label)
+split_point = int(len(dataset_all) * split_ratio)
+for _ in range(30):
+    # i = random.randint(split_point, len(dataset_all))
+    i = random.randint(3000, 3200)
+    if i % 100 == 0:
+        print("processing " + str(i))
+    label, image = prepare_img_and_label(dataset_all[i])
     test_images.append(image)
     test_labels.append(label)
 

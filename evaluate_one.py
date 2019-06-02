@@ -1,20 +1,19 @@
 from __future__ import absolute_import, division, print_function
 
+import easygui
 import imageio
-
+import matplotlib.pyplot as plt
+# Helper libraries
+import numpy as np
 # TensorFlow and tf.keras
 import tensorflow as tf
 import tensorflow_datasets as tfds
 from tensorflow import keras
 
-# Helper libraries
-import numpy as np
-import matplotlib.pyplot as plt
-
 from consts import model_name
-from plot_utils import plot_image, plot_value_array, plot_one_predicted
+from plot_utils import plot_value_array, plot_one_predicted
+from utils import prepare_image
 
-import easygui
 path = easygui.fileopenbox()
 
 
@@ -61,11 +60,7 @@ end_point = 20
 # path = r"C:\Users\wojciech.liebert\tensorflow_datasets\downloads\extracted\TAR_GZ.downl.tenso.org_examp_image_flowe_photoTFSs55Ear_4To2XDT2UOcd1b8b4KWLRk5acYPj5ZXZw.tgz\flower_photos\daisy"
 # path = path + r"\21652746_cc379e0eea_m.jpg"
 image = imageio.imread(path)
-image = np.asarray(image)
-image = image / 255
-image = tf.image.resize_images(image, (50, 50))
-image = tf.image.rgb_to_grayscale(image)
-image = image.numpy()
+image = prepare_image(image)
 
 test_images.append(image)
 test_images = np.array(test_images)
