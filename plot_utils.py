@@ -1,9 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+from consts import img_dim
+
 
 def plot_one_predicted(i, predictions_array, true_label, img, class_names):
-    predictions_array, true_label, img = predictions_array[i], true_label[i], img[i].reshape(50, 50)
+    predictions_array, true_label, img = predictions_array[i], true_label[i], img[i].reshape(img_dim, img_dim)
     plt.grid(False)
     plt.xticks([])
     plt.yticks([])
@@ -14,11 +16,12 @@ def plot_one_predicted(i, predictions_array, true_label, img, class_names):
     color = 'blue'
 
     plt.xlabel("{} {:2.0f}%".format(class_names[predicted_label],
-                                         100 * np.max(predictions_array)),
+                                    100 * np.max(predictions_array)),
                color=color)
 
+
 def plot_image(i, predictions_array, true_label, img, class_names):
-    predictions_array, true_label, img = predictions_array[i], true_label[i], img[i].reshape(50, 50)
+    predictions_array, true_label, img = predictions_array[i], true_label[i], img[i].reshape(img_dim, img_dim)
     plt.grid(False)
     plt.xticks([])
     plt.yticks([])

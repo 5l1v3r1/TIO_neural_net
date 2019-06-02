@@ -9,12 +9,18 @@ from tensorflow import keras
 import numpy as np
 import matplotlib.pyplot as plt
 
+from consts import img_dim, model_name
 from plot_utils import plot_image, plot_value_array
 
 print(tf.__version__)
 
 # tfds works in both Eager and Graph modes
 tf.enable_eager_execution()
+
+
+# tf_flowers total = 3,670
+# img_dim = 50
+
 
 # See available datasets
 print(tfds.list_builders())
@@ -23,13 +29,7 @@ class_names = ['dandelion', 'daisy', 'tulips', 'sunflowers', 'roses']
 # Construct a tf.data.Dataset
 # ds_train, ds_test = tfds.load(name="horses_or_humans", split=["train", "test"])
 ds_all = tfds.load(name="tf_flowers", split="train")
-
-# Build your input pipeline
-# ds_train = ds_train.shuffle(1000).batch(128).prefetch(10)
-# for features in ds_train.take(1):
-#   image, label = features["image"], features["label"]
-
-# tf_flowers total = 3,670
+ds_all = ds_all.shuffle(buffer_size=100)
 
 train_images = []
 train_labels = []
@@ -37,13 +37,15 @@ test_images = []
 test_labels = []
 ds_test = []
 split_point = int(3670 * 0.75)
-split_point = 300
-end_point = 20
+split_point = 1000
+end_point = 1200
 for i in range(split_point):
+    if i % 100 == 0:
+        print("processing " + str(i))
     mnist_example, = ds_all.take(1)
     image, label = mnist_example["image"], mnist_example["label"]
     image = image / 255
-    image = tf.image.resize_images(image, (50, 50))
+    image = tf.image.resize_images(image, (img_dim, img_dim))
     # image = image.reshape(1, 50, 50)
     # image = image_fit.resize_to_fit(image, 12, 22)
     image = tf.image.rgb_to_grayscale(image)
@@ -51,11 +53,13 @@ for i in range(split_point):
     train_images.append(image)
     train_labels.append(label)
 
-for i in range(split_point, split_point + end_point):
+for i in range(split_point, end_point):
+    if i % 100 == 0:
+        print("processing " + str(i))
     mnist_example, = ds_all.take(1)
     image, label = mnist_example["image"], mnist_example["label"]
     image = image / 255
-    image = tf.image.resize_images(image, (50, 50))
+    image = tf.image.resize_images(image, (img_dim, img_dim))
     image = tf.image.rgb_to_grayscale(image)
     image = image.numpy()
     test_images.append(image)
@@ -85,10 +89,10 @@ for i in range(split_point, split_point + end_point):
 # print("Label: %d" % label.numpy())
 
 model = keras.Sequential([
-    keras.layers.Flatten(input_shape=(50, 50, 1)),
+    keras.layers.Flatten(input_shape=(img_dim, img_dim, 1)),
     # keras.layers.InputLayer(input_shape=(50, 50, 1)),
     keras.layers.Dense(128, activation=tf.nn.relu),
-    keras.layers.Dense(5, activation=tf.nn.softmax)
+    keras.layers.Dense(len(class_names), activation=tf.nn.softmax)
 ])
 
 model.compile(optimizer='adam',
@@ -108,7 +112,7 @@ test_labels = np.array(test_labels)
 
 model.fit(train_images, train_labels, epochs=5)
 
-model.save('path_to_my_model.h5')
+model.save(model_name)
 
 test_loss, test_acc = model.evaluate(test_images, test_labels)
 print('Test accuracy:', test_acc)

@@ -11,6 +11,7 @@ from tensorflow import keras
 import numpy as np
 import matplotlib.pyplot as plt
 
+from consts import model_name
 from plot_utils import plot_image, plot_value_array, plot_one_predicted
 
 import easygui
@@ -20,7 +21,7 @@ path = easygui.fileopenbox()
 # tfds works in both Eager and Graph modes
 tf.enable_eager_execution()
 
-model = keras.models.load_model('path_to_my_model.h5')
+model = keras.models.load_model(model_name)
 
 # See available datasets
 print(tfds.list_builders())
