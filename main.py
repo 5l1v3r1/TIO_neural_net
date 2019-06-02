@@ -51,7 +51,7 @@ for i in range(split_point):
     train_images.append(image)
     train_labels.append(label)
 
-for i in range(split_point, end_point):
+for i in range(split_point, split_point + end_point):
     mnist_example, = ds_all.take(1)
     image, label = mnist_example["image"], mnist_example["label"]
     image = image / 255
@@ -111,15 +111,10 @@ model.fit(train_images, train_labels, epochs=5)
 model.save('path_to_my_model.h5')
 
 test_loss, test_acc = model.evaluate(test_images, test_labels)
-
-
 print('Test accuracy:', test_acc)
 
 predictions = model.predict(test_images)
 np.argmax(predictions[0])
-
-
-
 
 i = 0
 plt.figure(figsize=(6, 3))
