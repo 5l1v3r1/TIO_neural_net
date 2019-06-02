@@ -23,12 +23,14 @@ print(tfds.list_builders())
 
 class_names = ['dandelion', 'daisy', 'tulips', 'sunflowers', 'roses']
 ds_all = tfds.load(name="tf_flowers", split="train")
-ds_all = ds_all.shuffle(buffer_size=100)
+# ds_all = ds_all.shuffle(buffer_size=100)
+iterator = ds_all.make_one_shot_iterator()
 
 for i in range(3670):
     if i % 100 == 0:
         print("processing " + str(i))
-    mnist_example, = ds_all.take(1)
+    mnist_example = iterator.get_next()
+    # mnist_example, = ds_all.take(1)
     image, label = mnist_example["image"], mnist_example["label"]
     image = image / 255
     image = tf.image.resize_images(image, (img_dim, img_dim))

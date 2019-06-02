@@ -66,8 +66,6 @@ test_images.append(image)
 test_images = np.array(test_images)
 
 predictions = model.predict(test_images)
-np.argmax(predictions[0])
-
 
 i = 0
 plt.figure(figsize=(6, 3))

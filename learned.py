@@ -9,7 +9,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 
-from consts import model_name, split_ratio
+from consts import model_name
 from plot_utils import plot_image, plot_value_array
 # tfds works in both Eager and Graph modes
 from utils import prepare_img_and_label, load_flowers
@@ -51,7 +51,7 @@ ds_test = []
 #     train_images.append(image)
 #     train_labels.append(label)
 
-dataset_all = load_flowers()
+# dataset_all = load_flowers()
 # ds_all = ds_all.shuffle(buffer_size=100)
 # for i in range(0, 20):
 #     mnist_example, = ds_all.take(1)
@@ -62,13 +62,15 @@ dataset_all = load_flowers()
 #     image = image.numpy()
 #     test_images.append(image)
 #     test_labels.append(label)
-split_point = int(len(dataset_all) * split_ratio)
-for _ in range(30):
-    # i = random.randint(split_point, len(dataset_all))
-    i = random.randint(3000, 3200)
-    if i % 100 == 0:
-        print("processing " + str(i))
-    label, image = prepare_img_and_label(dataset_all[i])
+
+dataset_test = load_flowers(0.75, 1)
+# dataset_test = load_flowers(0, 1)
+for _ in range(25):
+    i = random.randint(0, dataset_test.__len__() - 1)
+# for i in range(dataset_test.__len__()):
+    #     if i % 100 == 0:
+    #         print("processing " + str(i))
+    label, image = prepare_img_and_label(dataset_test[i])
     test_images.append(image)
     test_labels.append(label)
 
@@ -77,8 +79,9 @@ test_labels = np.array(test_labels)
 
 
 predictions = model.predict(test_images)
-np.argmax(predictions[0])
+successes = np.sum([x[0] == x[1] for x in zip([np.argmax(x) for x in predictions], test_labels)])
 
+x = 0
 
 # i = 0
 # plt.figure(figsize=(6, 3))

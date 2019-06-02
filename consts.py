@@ -1,5 +1,5 @@
 img_dim = 100
-model_name = "model_100x100_RGB.h5.old"
+model_name = "model_100x100_RGB.h5"
 
 imgs_folder = r"C:/Users/wojciech.liebert/tensorflow_datasets/my_flowers_100x100_RGB"
 

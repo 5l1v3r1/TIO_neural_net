@@ -37,7 +37,7 @@ def label_name_to_number(label):
     return label_namee
 
 
-def load_flowers():
+def load_flowers(start=0.0, end=1.0):
     dataset_all = []
     rootDir = imgs_folder
     for dirName, subdirList, fileList in os.walk(rootDir):
@@ -46,16 +46,20 @@ def load_flowers():
         for dirname in subdirList:
             if print_debug:
                 print('\t%s' % dirname)
-            nested_load_flowers(dataset_all, dirName, dirname)
+            nested_load_flowers(dataset_all, dirName, dirname, start, end)
         # for fname in fileList:
         #     print('\t%s' % fname)
-    dataset_all = sorted(dataset_all, key=lambda x: x[1][0][0][0])
+    # dataset_all = sorted(dataset_all, key=lambda x: x[1][0][0][0])
     return dataset_all
 
 
-def nested_load_flowers(dataset_all, dirName, dirname):
+def nested_load_flowers(dataset_all, dirName, dirname, start, end):
     for dirName, subdirList, fileList in os.walk(dirName + "/" + dirname):
-        for fname in fileList:
+        from_i = int(len(fileList) * start)
+        to_i = int(len(fileList) * end)
+        print("taking {} from {} to {}".format(dirname, from_i, to_i))
+        files = fileList[from_i:to_i]
+        for fname in files:
             if print_debug:
                 print('\t%s' % fname)
             dataset_all.append((dirname, imageio.imread(dirName + "/" + fname)))
