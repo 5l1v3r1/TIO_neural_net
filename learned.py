@@ -80,6 +80,8 @@ test_labels = np.array(test_labels)
 
 predictions = model.predict(test_images)
 successes = np.sum([x[0] == x[1] for x in zip([np.argmax(x) for x in predictions], test_labels)])
+success_ratio = successes / len(test_images)
+print("success ratio: {}".format(success_ratio))
 
 x = 0
 

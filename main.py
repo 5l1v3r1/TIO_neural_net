@@ -7,7 +7,7 @@ import tensorflow as tf
 import tensorflow_datasets as tfds
 from tensorflow import keras
 
-from consts import model_name
+from consts import model_name, img_dim
 from plot_utils import plot_image, plot_value_array
 from utils import load_flowers, prepare_img_and_label
 
@@ -81,31 +81,31 @@ for i in range(dataset_test.__len__()):
 # plt.show()
 # print("Label: %d" % label.numpy())
 
-# model = keras.Sequential([
-#     keras.layers.Conv2D(64, kernel_size=(20,20), activation='linear', input_shape=(img_dim, img_dim, 3), padding='same'),
-#     keras.layers.LeakyReLU(alpha=0.1),
-#     keras.layers.MaxPooling2D(pool_size=(5,5), padding='same'),
-#     keras.layers.Dropout(0.25),
-#     keras.layers.Conv2D(128, kernel_size=(10,10), activation='linear', input_shape=(img_dim, img_dim, 3), padding='same'),
-#     keras.layers.LeakyReLU(alpha=0.1),
-#     keras.layers.MaxPooling2D(pool_size=(4,4), padding='same'),
-#     keras.layers.Dropout(0.25),
-#     keras.layers.Conv2D(512, kernel_size=(5, 5), activation='linear', input_shape=(img_dim, img_dim, 3), padding='same'),
-#     keras.layers.LeakyReLU(alpha=0.1),
-#     keras.layers.MaxPooling2D(pool_size=(2, 2), padding='same'),
-#     keras.layers.Dropout(0.4),
-#     keras.layers.Flatten(),
-#     keras.layers.Dense(512, activation=tf.nn.relu),
-#     keras.layers.LeakyReLU(alpha=0.1),
-#     keras.layers.Dropout(0.3),
-#     keras.layers.Dense(len(class_names), activation=tf.nn.softmax)
-# ])
-#
-# model.compile(optimizer='adam',
-#               loss='sparse_categorical_crossentropy',
-#               metrics=['accuracy'])
+model = keras.Sequential([
+    keras.layers.Conv2D(32, kernel_size=(10,10), activation='linear', input_shape=(img_dim, img_dim, 3), padding='same'),
+    keras.layers.LeakyReLU(alpha=0.1),
+    keras.layers.MaxPooling2D(pool_size=(3,3), padding='same'),
+    keras.layers.Dropout(0.25),
+    keras.layers.Conv2D(128, kernel_size=(10,10), activation='linear', input_shape=(img_dim, img_dim, 3), padding='same'),
+    keras.layers.LeakyReLU(alpha=0.1),
+    keras.layers.MaxPooling2D(pool_size=(4,4), padding='same'),
+    keras.layers.Dropout(0.25),
+    keras.layers.Conv2D(128, kernel_size=(4, 4), activation='linear', input_shape=(img_dim, img_dim, 3), padding='same'),
+    keras.layers.LeakyReLU(alpha=0.1),
+    keras.layers.MaxPooling2D(pool_size=(5, 5), padding='same'),
+    keras.layers.Dropout(0.4),
+    keras.layers.Flatten(),
+    keras.layers.Dense(128, activation=tf.nn.relu),
+    keras.layers.LeakyReLU(alpha=0.1),
+    keras.layers.Dropout(0.3),
+    keras.layers.Dense(len(class_names), activation=tf.nn.softmax)
+])
 
-model = keras.models.load_model(model_name)
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+
+# model = keras.models.load_model(model_name)
 
 # tensor_train_images = tf.convert_to_tensor(train_images)
 # tensor_train_images = tf.reshape(tensor_train_images, shape=(tensor_train_images.shape[0], 50, 50))
